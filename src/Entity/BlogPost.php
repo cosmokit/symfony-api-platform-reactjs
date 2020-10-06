@@ -59,7 +59,7 @@ class BlogPost
         return $this;
     }
 
-    public function getPublished(): ?string
+    public function getPublished()
     {
         return $this->published;
     }

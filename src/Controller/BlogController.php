@@ -4,6 +4,8 @@
 namespace App\Controller;
 
 
+use App\Entity\BlogPost;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,6 +19,17 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class BlogController extends AbstractController
 {
+
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
 
     private const POSTS = [
         [
@@ -38,13 +51,13 @@ class BlogController extends AbstractController
 
 
     /**
-     * @Route("/{page}", name="blog_list", defaults={"page": 5 })
+     * @param int $page
+     * @param Request $request
+     * @return JsonResponse
      */
     public function list($page = 1, Request $request){
 
         $limit = $request->get('limit', 10);
-
-
 
         return new JsonResponse(
             [
@@ -57,21 +70,45 @@ class BlogController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/{id}", name="blog_by_id", requirements={"id"="\d+"})
-     */
     public function post($id){
         return new JsonResponse(
             self::POSTS[array_search($id, array_column(self::POSTS, 'id'))]
         );
     }
 
-    /**
-     * @Route("/{slug}", name="blog_by_slug")
-     */
     public function postBySlug($slug){
         return new JsonResponse(
             self::POSTS[array_search($slug, array_column(self::POSTS, 'slug'))]
         );
+    }
+
+
+    public function add(Request $request ){
+        $serializer = $this->get('serializer');
+
+        $blogPost = $serializer->deserialize($request->getContent(), BlogPost::class, 'json');
+
+        $this->em->persist($blogPost);
+        $this->em->flush();
+
+        return $this->json($blogPost);
+
+    }
+
+    public function addTest(){
+        $blogPost = new BlogPost();
+
+        $blogPost->setAuthor('Grzesiek');
+        $blogPost->setContent('Tekst w zasadzie o niczym');
+        $blogPost->setPublished(new \DateTime());
+        $blogPost->setTitle('Historia kotka');
+
+        $this->em->persist($blogPost);
+        $this->em->flush();
+
+        return new JsonResponse(
+            'Poszło'
+        );
+
     }
 }
