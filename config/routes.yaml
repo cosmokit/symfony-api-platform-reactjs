@@ -1,3 +1,36 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+
+blog_list:
+  path: /blog/list/{page}
+  defaults:
+      _controller: App\Controller\BlogController::list
+      format: json
+      page: 1
+  requirements:
+      page: '^[0-9]+$'
+blog_by_id:
+  path: /blog/id/{id}
+  defaults:
+      _controller: App\Controller\BlogController::post
+      format: json
+      page: 1
+  requirements:
+    post: '\d+'
+blog_by_slug:
+  path: /blog/slug/{slug}
+  defaults:
+      _controller: App\Controller\BlogController::postBySlug
+      format: json
+blog_add:
+  path: /blog/add
+  methods: POST
+  defaults:
+    _controller: App\Controller\BlogController::add
+blog_add_test:
+  path: /blog/addTest
+  defaults:
+    _controller: App\Controller\BlogController::addTest
+
+
