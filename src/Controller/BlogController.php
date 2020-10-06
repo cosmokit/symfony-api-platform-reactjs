@@ -58,27 +58,30 @@ class BlogController extends AbstractController
     public function list($page = 1, Request $request){
 
         $limit = $request->get('limit', 10);
+        $blogList = $this->em->getRepository(BlogPost::class);
+        $items = $blogList->findAll();
 
-        return new JsonResponse(
+
+        return $this->json(
             [
                 'page' => $page,
                 'limit' => $limit,
-                'data' => array_map(function ($item){
-                    return $this->generateUrl('blog_by_slug', ['slug' => $item['slug']]);
-                }, self::POSTS )
+                'data' => array_map(function (BlogPost $item){
+                    return $this->generateUrl('blog_by_slug', [ 'slug' => $item->getSlug() ]);
+                }, $items )
             ]
         );
     }
 
     public function post($id){
-        return new JsonResponse(
-            self::POSTS[array_search($id, array_column(self::POSTS, 'id'))]
+        return  $this->json(
+            $this->em->getRepository(BlogPost::class)->find($id)
         );
     }
 
     public function postBySlug($slug){
-        return new JsonResponse(
-            self::POSTS[array_search($slug, array_column(self::POSTS, 'slug'))]
+        return $this->json(
+            $this->em->getRepository(BlogPost::class)->findBy(['slug' => $slug])
         );
     }
 
