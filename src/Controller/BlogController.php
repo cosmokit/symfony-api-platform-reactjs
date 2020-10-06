@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
 
 
 /**
@@ -31,25 +32,6 @@ class BlogController extends AbstractController
     {
         $this->em = $em;
     }
-
-    private const POSTS = [
-        [
-            'id' => 1,
-            'slug' => 'hellow-world',
-            'title' => 'Hello world!',
-        ],
-        [
-            'id' => 2,
-            'slug' => 'another-post',
-            'title' => 'This is another post!',
-        ],
-        [
-            'id' => 3,
-            'slug' => 'last-example',
-            'title' => 'This is the last example!',
-        ]
-    ];
-
 
     /**
      * @param int $page
@@ -123,5 +105,16 @@ class BlogController extends AbstractController
             'Poszło'
         );
 
+    }
+
+    /**
+     * @ParamConverter("post", class="App:BlogPost")
+     * @param BlogPost $post
+     * @return JsonResponse
+     */
+    public function delete($post){
+        $this->em->remove($post);
+        $this->em->flush();
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 }
