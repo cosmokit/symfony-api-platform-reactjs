@@ -59,7 +59,7 @@ class BlogPost
         return $this;
     }
 
-    public function getPublished()
+    public function getPublished(): ?\DateTimeInterface
     {
         return $this->published;
     }
