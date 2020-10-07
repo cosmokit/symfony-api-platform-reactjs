@@ -23,11 +23,6 @@ class BlogPost
     private $title;
 
     /**
-     * @ORM\Column(type="datetime")
-     */
-    private $published;
-
-    /**
      * @ORM\Column(type="text")
      */
     private $content;
@@ -42,6 +37,11 @@ class BlogPost
      */
     private $slug;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $published;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -55,18 +55,6 @@ class BlogPost
     public function setTitle(string $title): self
     {
         $this->title = $title;
-
-        return $this;
-    }
-
-    public function getPublished(): ?\DateTimeInterface
-    {
-        return $this->published;
-    }
-
-    public function setPublished(\DateTimeInterface $published): self
-    {
-        $this->published = $published;
 
         return $this;
     }
@@ -106,5 +94,19 @@ class BlogPost
 
         return $this;
     }
+
+    public function getPublished(): ?\DateTimeInterface
+    {
+        return $this->published;
+    }
+
+    public function setPublished(\DateTimeInterface $published): self
+    {
+        $this->published = $published;
+
+        return $this;
+    }
+    
+
 
 }
