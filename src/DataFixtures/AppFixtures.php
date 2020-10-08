@@ -8,6 +8,7 @@ use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AppFixtures extends Fixture
 {
@@ -16,10 +17,15 @@ class AppFixtures extends Fixture
      * @var EntityManagerInterface
      */
     private $em;
+    /**
+     * @var UserPasswordEncoderInterface
+     */
+    private $passwordEncoder;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder)
     {
         $this->em = $em;
+        $this->passwordEncoder = $passwordEncoder;
     }
 
 
@@ -75,7 +81,7 @@ class AppFixtures extends Fixture
     public function loadUsers(ObjectManager $manager){
         $user = new User();
         $user->setEmail('admin@myadmin.pl');
-        $user->setPassword('qaz');
+        $user->setPassword($this->passwordEncoder->encodePassword($user, 'qaz'));
         $user->setRoles(['USER_ROLE']);
 
         $this->addReference('single_user', $user);
