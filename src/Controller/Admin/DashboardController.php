@@ -9,6 +9,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use EasyCorp\Bundle\EasyAdminBundle\Router\CrudUrlGenerator;
+
 
 
 class DashboardController extends AbstractDashboardController
@@ -18,7 +20,8 @@ class DashboardController extends AbstractDashboardController
      */
     public function index(): Response
     {
-        return parent::index();
+        return $this->render('adminpanel/dashboard.html.twig');
+        //return parent::index();
     }
 
     public function configureDashboard(): Dashboard
@@ -26,6 +29,8 @@ class DashboardController extends AbstractDashboardController
         return Dashboard::new()
             ->setTitle('Symfony Api Platform Reactjs');
     }
+
+
 
 
     public function configureMenuItems(): iterable
