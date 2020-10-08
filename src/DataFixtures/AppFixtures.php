@@ -21,11 +21,18 @@ class AppFixtures extends Fixture
      * @var UserPasswordEncoderInterface
      */
     private $passwordEncoder;
+    /**
+     * @var \Faker\Factory
+     */
+    private $faker;
 
     public function __construct(EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder)
     {
         $this->em = $em;
         $this->passwordEncoder = $passwordEncoder;
+
+        // Pakiet z poza. Wstrzykujemy inaczej.
+        $this->faker = \Faker\Factory::create();
     }
 
 
@@ -40,40 +47,37 @@ class AppFixtures extends Fixture
 
     public function loadBlogPosts(ObjectManager $manager){
 
-
-
-        $blogPost = new BlogPost();
         $user = $this->getReference('single_user');
 
-        $blogPost->setAuthor($user);
-        $blogPost->setContent('Tekst w zasadzie o niczym Random');
-        $blogPost->setPublished(new \DateTime());
-        $blogPost->setTitle('Historia kotka');
-        $blogPost->setSlug('historie-kotka');
+        for ($i = 0; $i < 20; $i++){
 
-        $manager->persist($blogPost);
+            $blogPost = new BlogPost();
+            $blogPost->setAuthor($user);
+            $blogPost->setContent($this->faker->realText(60));
+            $blogPost->setPublished($this->faker->dateTimeThisYear);
+            $blogPost->setTitle($this->faker->realText(30));
+            $blogPost->setSlug( $this->faker->slug);
 
-        $blogPost = new BlogPost();
-        $blogPost->setAuthor($user);
-        $blogPost->setContent('Kiedy Byłem małym chłopcem chej');
-        $blogPost->setPublished(new \DateTime());
-        $blogPost->setTitle('Co za czasy');
-        $blogPost->setSlug('co-za-czasy');
+            $manager->persist($blogPost);
+        }
 
-        $manager->persist($blogPost);
         $manager->flush();
     }
 
     public function loadComments(ObjectManager $manager){
 
-        $comments = new Comment();
-        $user = $this->getReference('single_user');
+        for ($i = 0; $i < 20; $i++) {
+            for ($j = 0; $j < rand(1,10); $j++){
+                $comments = new Comment();
+                $user = $this->getReference('single_user');
 
-        $comments->setContent('Komentarz testowy do komentarza');
-        $comments->setAuthor($user);
-        $comments->setPublished(new \DateTime());
+                $comments->setContent($this->faker->realText());
+                $comments->setAuthor($this->getReference('single_user'));
+                $comments->setPublished($this->faker->dateTimeThisYear);
 
-        $manager->persist($comments);
+                $manager->persist($comments);
+            }
+        }
         $manager->flush();
 
     }
