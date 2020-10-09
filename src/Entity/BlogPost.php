@@ -98,22 +98,22 @@ class BlogPost
         return $this;
     }
 
-    /**
-     * @return User
-     */
-    public function getAuthor(): ?User
-    {
-        return $this->author;
-    }
-
-    /**
-     * @param User $author
-     */
-    public function setAuthor(?User $author): self
-    {
-        $this->author = $author;
-        return $this;
-    }
+//    /**
+//     * @return User
+//     */
+//    public function getAuthor(): ?User
+//    {
+//        return $this->author;
+//    }
+//
+//    /**
+//     * @param User $author
+//     */
+//    public function setAuthor(?User $author): self
+//    {
+//        $this->author = $author;
+//        return $this;
+//    }
     
 
 
