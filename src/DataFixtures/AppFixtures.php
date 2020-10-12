@@ -47,16 +47,16 @@ class AppFixtures extends Fixture
 
     public function loadBlogPosts(ObjectManager $manager){
 
-        $user = $this->getReference('single_user');
-
         for ($i = 0; $i < 20; $i++){
 
             $blogPost = new BlogPost();
-            $blogPost->setAuthor($user);
+            $blogPost->setAuthor($this->getReference("single_user_$i"));
             $blogPost->setContent($this->faker->realText(60));
             $blogPost->setPublished($this->faker->dateTimeThisYear);
             $blogPost->setTitle($this->faker->realText(30));
             $blogPost->setSlug( $this->faker->slug);
+
+            $this->setReference("Blog_post_$i", $blogPost);
 
             $manager->persist($blogPost);
         }
@@ -67,12 +67,12 @@ class AppFixtures extends Fixture
     public function loadComments(ObjectManager $manager){
 
         for ($i = 0; $i < 20; $i++) {
-            for ($j = 0; $j < rand(1,10); $j++){
+            for ($j = 0; $j < rand(1,20); $j++){
                 $comments = new Comment();
-                $user = $this->getReference('single_user');
 
                 $comments->setContent($this->faker->realText());
-                $comments->setAuthor($this->getReference('single_user'));
+                $comments->setAuthor($this->getReference("single_user_$i"));
+                $comments->setBlogPost($this->getReference("Blog_post_$i"));
                 $comments->setPublished($this->faker->dateTimeThisYear);
 
                 $manager->persist($comments);
@@ -86,11 +86,23 @@ class AppFixtures extends Fixture
         $user = new User();
         $user->setEmail('admin@myadmin.pl');
         $user->setPassword($this->passwordEncoder->encodePassword($user, 'qaz'));
-        $user->setRoles(['USER_ROLE']);
-
-        $this->addReference('single_user', $user);
-
+        $user->setRoles(['ADMIN_ROLE']);
         $manager->persist($user);
+
+
+        for ($i = 0; $i < 20; $i++) {
+            $user = new User();
+            $user->setEmail($this->faker->email);
+            $user->setPassword($this->passwordEncoder->encodePassword($user, 'xsw'));
+            $user->setRoles(['USER_ROLE']);
+
+            $this->addReference("single_user_$i", $user);
+            $manager->persist($user);
+        }
+        $manager->flush();
+
+
+
         $manager->flush();
     }
 
