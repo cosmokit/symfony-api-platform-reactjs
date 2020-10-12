@@ -8,11 +8,15 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
  *     itemOperations={"get"},
- *     collectionOperations={}
+ *     collectionOperations={},
+ *     normalizationContext={
+ *     "groups"={"read"}
+ *     }
  * )
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
@@ -22,6 +26,7 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"read"})
      */
     private $id;
 
@@ -43,11 +48,13 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=BlogPost::class, mappedBy="author")
+     * @Groups({"read"})
      */
     private $blogPosts;
 
     /**
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="author")
+     * @Groups({"read"})
      */
     private $comments;
 
@@ -165,6 +172,14 @@ class User implements UserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Comments[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
     }
 
 
