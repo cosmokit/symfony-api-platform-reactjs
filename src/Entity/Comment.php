@@ -30,15 +30,14 @@ class Comment
     private $published;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $author;
-
-    /**
      * @ORM\ManyToOne(targetEntity=BlogPost::class, inversedBy="comments")
      */
     private $blogPost;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="comments")
+     */
+    private $author;
 
     public function getId(): ?int
     {
@@ -69,23 +68,6 @@ class Comment
         return $this;
     }
 
-    /**
-     * @return User
-     */
-    public function getAuthor(): User
-    {
-        return $this->author;
-    }
-
-    /**
-     * @param User $author
-     */
-    public function setAuthor(User $author): self
-    {
-        $this->author = $author;
-        return $this;
-    }
-
     public function getBlogPost(): ?BlogPost
     {
         return $this->blogPost;
@@ -94,6 +76,18 @@ class Comment
     public function setBlogPost(?BlogPost $blogPost): self
     {
         $this->blogPost = $blogPost;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): self
+    {
+        $this->author = $author;
 
         return $this;
     }

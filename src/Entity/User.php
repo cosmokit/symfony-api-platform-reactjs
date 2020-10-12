@@ -37,21 +37,20 @@ class User implements UserInterface
     private $password;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="author")
-     */
-    private $comments;
-
-    /**
      * @ORM\OneToMany(targetEntity=BlogPost::class, mappedBy="author")
      */
     private $blogPosts;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="author")
+     */
+    private $comments;
+
 
     public function __construct()
     {
-        $this->post = new ArrayCollection();
-        $this->comments = new ArrayCollection();
         $this->blogPosts = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -130,14 +129,6 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getComments(): ArrayCollection
-    {
-        return $this->comments;
     }
 
     /**
