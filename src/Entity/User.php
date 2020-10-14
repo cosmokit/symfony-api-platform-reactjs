@@ -56,6 +56,15 @@ class User implements UserInterface
     private $password;
 
     /**
+     * @Assert\NotBlank()
+     * @Assert\Expression(
+     *     "this.getPassword() === this.getRetypedPassword()",
+     *     message="Passwords does not match"
+     * )
+     */
+    private $retypedPassword;
+
+    /**
      * @ORM\OneToMany(targetEntity=BlogPost::class, mappedBy="author")
      * @Groups({"read"})
      */
@@ -189,6 +198,22 @@ class User implements UserInterface
     public function getComments(): Collection
     {
         return $this->comments;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRetypedPassword()
+    {
+        return $this->retypedPassword;
+    }
+
+    /**
+     * @param mixed $retypedPassword
+     */
+    public function setRetypedPassword($retypedPassword): void
+    {
+        $this->retypedPassword = $retypedPassword;
     }
 
 
