@@ -1,6 +1,6 @@
 <h3>Server startup:</h3>
-`cd my-project/` <br>
-`symfony server:start`
+```cd my-project/``` <br>
+```symfony server:start```
 
 ### Project configuration needed to run
 
@@ -13,3 +13,7 @@
 Login address: <br> 
 e-mail: ```admin@myadmin.pl```  <br>
 password: ```qaz```  <br>
+
+
+###Preparing JWT token library and keys
+```openssl genrsa -out config/jwt/private.pem -aes256 4096```
